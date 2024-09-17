@@ -7,7 +7,11 @@ C++ implementation of [BPM: Blended Piecewise M&ouml;bius Maps](https://arxiv.or
 
 Technical report is under `doc` folder.
 ## Video
-https://github.com/user-attachments/assets/a52ac7f2-1d0c-4e42-91b3-f02ae34ca4d5
+
+
+https://github.com/user-attachments/assets/dc4b5f5d-7f66-42e6-8f5d-3aa0f93195c5
+
+
 
 
 ## Build Instructions
