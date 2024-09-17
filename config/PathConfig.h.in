@@ -1,0 +1,4 @@
+// PathConfig.h.in
+#pragma once
+
+#define RESOURCES_DIR "@RESOURCES_DIR@"

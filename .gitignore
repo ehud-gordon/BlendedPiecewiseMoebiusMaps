@@ -1,0 +1,27 @@
+# Exclude Visual Studio Code
+.vs/
+.vscode/
+# Exclude Build
+/out/
+bin/
+build/
+libs
+#imgui
+imgui.ini
+stam*
+/vids/
+
+# tex
+*.aux
+*.tex~
+*.log
+*.bbl
+*.fls
+*.toc
+*.synctex.gz
+**/*.synctex.gz
+**/*synctex.gz
+*.gz
+*.out
+*.fdb_latexmk
+**/*stam*
