@@ -16,7 +16,6 @@ public:
 	bool is_backface_culling_ = false;
 	bool is_depth_testing_ = true;
 	bool draw_axes_ = false;
-	bool draw_bbox_ = false;
 
 	bool draw_vertex_normals_ = false;
 	bool draw_face_normals_ = false;

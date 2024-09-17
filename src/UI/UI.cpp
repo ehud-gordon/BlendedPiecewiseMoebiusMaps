@@ -38,7 +38,6 @@ void UI::ShowUI(){
             }
         }
         ImGui::MenuItem("Backface Culling", "", &(renderer_->is_backface_culling_));
-        ImGui::MenuItem("Bounding Box", "", &(renderer_->draw_bbox_));
         ImGui::MenuItem("Axes", "", &(renderer_->draw_axes_));
         ImGui::EndMenu();
     }
