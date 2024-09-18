@@ -22,4 +22,6 @@ namespace geometry {
 	};
 		void ComputeBBoxVertices();
 	};
+
+	glm::vec3 ComputeFaceNormal(glm::vec3 v0, glm::vec3 v1, glm::vec3 v2);
 } // namespace geometry

@@ -25,7 +25,7 @@ enum class TextureType {
 };
 TextureType& operator++(TextureType& c);
 const char* GetTextureTypeName(TextureType type);
-
+constexpr const char* DEFAULT_DATA_DIR = "data";
 constexpr const char* DEFAULT_MODEL_NAME = "wolf_head.obj";
 constexpr float PI = glm::pi<float>();
 constexpr float HALF_PI = glm::half_pi<float>();

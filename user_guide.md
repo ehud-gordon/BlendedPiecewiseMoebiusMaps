@@ -14,17 +14,20 @@ cd BlendedPiecewiseMoebiusMaps
     cmake .. -DCMAKE_BUILD_TYPE=Release
     make -j7
 ```
-4. After build, make sure <model_name>.obj is placed in resources/objects dir, and from inside the build directory, run the code with:
+1. After build, from inside the build directory, run the code with:
+```bash
+./BPM <model_path>.obj
 ```
-./BPM <model_name>.obj
+for example, you may run
+```bash
+./BPM ../data/wolf_head.obj
 ```
 
-
-Running:
-```
+Running:  
+```bash
 ./BPM 
 ```
-runs the default model.
+runs the default model 'wolf_head.obj'.
 ## GUI
 * Press T to change Texture type from Blended-Piecewise Mobius (BPM) to Linear-Piecewise. The type of texture is shown in (2)
 * Press F toggles wireframe

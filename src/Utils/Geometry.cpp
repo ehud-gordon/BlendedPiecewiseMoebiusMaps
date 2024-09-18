@@ -9,15 +9,21 @@ glm::mat4 geometry::GetRotationMatrix(float yaw, float pitch, float roll) {
 	return yaw_matrix * pitch_matrix * roll_matrix;
 }
 
+glm::vec3 geometry::ComputeFaceNormal(glm::vec3 v0, glm::vec3 v1,
+                                      glm::vec3 v2) {
+    glm::vec3 edge1 = v1 - v0;
+    glm::vec3 edge2 = v2 - v0;
+    return glm::normalize(glm::cross(edge1, edge2));
+}
 void geometry::BoundingBox::ComputeBBoxVertices() {
-    vertices_ = {
-    min_.x, min_.y, min_.z, // 0
-    max_.x, min_.y, min_.z, // 1
-    max_.x, max_.y, min_.z, // 2
-    min_.x, max_.y, min_.z, // 3
-    min_.x, min_.y, max_.z, // 4
-    max_.x, min_.y, max_.z, // 5
-    max_.x, max_.y, max_.z, // 6
-    min_.x, max_.y, max_.z  // 7 
-	};
+  vertices_ = {
+      min_.x, min_.y, min_.z,  // 0
+      max_.x, min_.y, min_.z,  // 1
+      max_.x, max_.y, min_.z,  // 2
+      min_.x, max_.y, min_.z,  // 3
+      min_.x, min_.y, max_.z,  // 4
+      max_.x, min_.y, max_.z,  // 5
+      max_.x, max_.y, max_.z,  // 6
+      min_.x, max_.y, max_.z   // 7
+  };
 }

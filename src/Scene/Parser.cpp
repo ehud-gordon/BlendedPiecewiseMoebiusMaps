@@ -10,6 +10,8 @@
 
 #include <glm/glm.hpp>
 
+#include "Utils/Geometry.h"
+
 namespace fs = std::filesystem;
 
 struct Face {
@@ -17,8 +19,17 @@ struct Face {
     unsigned int vtIdx[3];
     unsigned int vnIdx[3];
 };
+void GetDirAndBaseName(const std::string& path, std::string& dir, std::string& base_name) {
+    size_t last_slash_idx = path.find_last_of("\\/");
+    if (std::string::npos != last_slash_idx) {
+        dir = path.substr(0, last_slash_idx);
+        base_name = path.substr(last_slash_idx + 1, path.size() - 5 - last_slash_idx);
+    } else {
+        base_name = path.substr(0, path.size() - 4);
+    }
+}
 
-void check_file_exists(std::string& path, const std::string& directory) {
+void check_file_exists(std::string& path, const std::string& directory, bool throw_error = true) {
     // First, check if the path already exists
     if (!fs::exists(path)) {
         // If not, prepend the directory
@@ -30,13 +41,15 @@ void check_file_exists(std::string& path, const std::string& directory) {
             path = full_path.string();
         } else {
             // If the file still doesn't exist, raise an error
-            throw std::runtime_error("File not found: " + path + " or " + full_path.string());
+            if (throw_error) {
+                throw std::runtime_error("File not found: " + path + " or " + full_path.string());
+            }
         }
     }
 }
 
-void ParseMtlFile(std::string& mtllib_path, const std::string& mtl_name, const std::string& directory, std::string& texture_path) {
-    check_file_exists(mtllib_path, directory);
+void ParseMtlFile(std::string& mtllib_path, const std::string& mtl_name, const std::string& obj_dir, std::string& texture_path) {
+    check_file_exists(mtllib_path, obj_dir);
     std::ifstream mtllib_file(mtllib_path);
     if (!mtllib_file.is_open()) {
         throw std::runtime_error("Could not open .mtl file: " + mtllib_path);
@@ -57,7 +70,9 @@ void ParseMtlFile(std::string& mtllib_path, const std::string& mtl_name, const s
             }
         } else if (found_mtl && token == "map_Kd") {
             iss >> texture_path;
-            check_file_exists(texture_path, directory);
+            std::string mtllib_dir, mtllib_name;
+            GetDirAndBaseName(mtllib_path, mtllib_dir, mtllib_name);
+            check_file_exists(texture_path, mtllib_dir);
             return;
         }
     }
@@ -166,7 +181,8 @@ void ParseObjFile(const std::string& obj_path,
     vt_max_delta = std::max(vt_max.x - vt_min.x, vt_max.y - vt_min.y);
 
     // After reading all the faces, update vertices with texture coordinates and normals
-    for (const auto& face : temp_faces) {
+    for (const auto& face : temp_faces) 
+    {
         for (int i = 0; i < 3; ++i) {
             Vertex& vertex = vertices[face.vIdx[i]];
             if (face.vtIdx[i] < temp_tex_coords.size()) {
@@ -177,22 +193,13 @@ void ParseObjFile(const std::string& obj_path,
             }
         }
         // compute face normal using the positions
-        glm::vec3 v0 = vertices[face.vIdx[0]].position_;
-        glm::vec3 v1 = vertices[face.vIdx[1]].position_;
-        glm::vec3 v2 = vertices[face.vIdx[2]].position_;
-        glm::vec3 e1 = v1 - v0;
-        glm::vec3 e2 = v2 - v0;
-        glm::vec3 normal = glm::normalize(glm::cross(e1, e2));
-        face_normals.push_back(normal);
+        face_normals.push_back(geometry::ComputeFaceNormal(
+                                    vertices[face.vIdx[0]].position_,
+                                    vertices[face.vIdx[1]].position_,
+                                    vertices[face.vIdx[2]].position_));
     }
     // get texture path
-    std::string directory, model_name;
-    size_t last_slash_idx = obj_path.find_last_of("\\/");
-    if (std::string::npos != last_slash_idx) {
-        directory = obj_path.substr(0, last_slash_idx);
-        model_name = obj_path.substr(last_slash_idx + 1, obj_path.size() - 5 - last_slash_idx);
-    } else {
-        model_name = obj_path.substr(0, obj_path.size() - 4);
-    }
-    ParseMtlFile(mtllib_path, mtl_name, directory, texture_path);
+    std::string obj_directory, model_name;
+    GetDirAndBaseName(obj_path, obj_directory, model_name);
+    ParseMtlFile(mtllib_path, mtl_name, obj_directory, texture_path);
 }

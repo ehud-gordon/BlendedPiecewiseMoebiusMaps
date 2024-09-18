@@ -11,6 +11,8 @@ imgui.ini
 stam*
 /vids/
 
+/config/PathConfig.h
+
 # tex
 *.aux
 *.tex~

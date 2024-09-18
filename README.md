@@ -18,20 +18,20 @@ https://github.com/user-attachments/assets/dc4b5f5d-7f66-42e6-8f5d-3aa0f93195c5
 
 1. Run the following commands:
 
-    ```bash
-    mkdir build
-    cd build
-    cmake .. -DCMAKE_BUILD_TYPE=Release
-    make -j7
-    ```
+```bash
+mkdir build
+cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release
+make -j7
+```
 
 2. After building, make sure model.obj is placed in resources/objects dir, and run the code with:
-```
+```bash
 ./BPM model.obj
 ```
 
 Running:
-```
+```bash
 ./BPM 
 ```
 runs default model.

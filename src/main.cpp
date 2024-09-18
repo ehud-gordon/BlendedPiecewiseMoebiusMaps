@@ -27,23 +27,15 @@ Renderer* renderer;
 namespace fs = std::filesystem;
 
 int main(int argc, char* argv[]) {
-    std::string model_name;
-    fs::path objects_path = fs::path(RESOURCES_DIR) / "objects";
-    
+    std::string model_path;
     if (argc != 2) {
-        model_name = DEFAULT_MODEL_NAME;
-        std::cout << "Usage: " << argv[0] << " <model>.obj" << std::endl;
-        std::cout << "Place <model>.obj file in:\n";
-        std::cout << objects_path.string() << fs::path::preferred_separator << "<model>.obj\n";
-        std::cout <<"and call:\n";
-        std::cout << argv[0] << " <model>.obj" << std::endl;
-        fs::path default_model_path = objects_path / DEFAULT_MODEL_NAME;
-        std::cout << "defaulting to: " << default_model_path.string() << std::endl;
+        std::cout << "Usage: " << argv[0] << " <model_path>.obj" << std::endl;
+        fs::path default_model_path = fs::path(DEFAULT_DATA_DIR) / DEFAULT_MODEL_NAME;
+        model_path = default_model_path.string();
+        std::cout << "defaulting to: " << model_path  << std::endl;
     } else {
-        model_name = argv[1];
+        model_path = argv[1];
     }
-    fs::path model_fs_path = objects_path / model_name;
-    std::string model_path = model_fs_path.string();
     
     // Initialize GLFW
     ControlState* control_state = nullptr;
