@@ -1,5 +1,5 @@
 # BPM: Blended Piecewise Möbius Maps
-C++ implementation of [BPM: Blended Piecewise M&ouml;bius Maps](https://mirelabc.github.io/publications/BPM.pdf) by Rorberg, Vaxman & Ben-Chen.
+C++/OpenGL implementation of [BPM: Blended Piecewise M&ouml;bius Maps](https://mirelabc.github.io/publications/BPM.pdf) by Rorberg, Vaxman & Ben-Chen.
 
 |![BPM interpolated wolf head](images/wolf_head_BPM.png "BPM interpolation")|![Piecewise-linear wolf head](images/wolf_head_PL.png "Piecewise-linear interpolation")|
 |:----:|:-----:|
