@@ -120,7 +120,7 @@ vec2 FlattenVertex(vec3 origin, vec3 end, vec3 new_v, bool is_left_vt) {
     vec3 n = sgn*cross(end-new_v, origin-new_v); // normal of other triangle
     float n1 = n.z; // component in 1-direction (aka x-axis)
     float n2 = dot(n, v1); // component in 2-direction (aka y-axis)
-    float theta = atan(-n2, n1);
+    float theta = sgn*atan(-n2, n1);
     mat4 TF = createRotation3dLineAngle(origin, dir, theta);
     vec3 new_trans = transformPoint3d(new_v, TF);
     return vec2(new_trans.x, new_trans.y);

@@ -32,7 +32,6 @@ public:
     void SetCameraUniforms(Scene* scene);
 
     void SetModelTransformation(const glm::mat4& model_transform);
-    void SetModelUniforms(Shader& shader, const MeshModel& mesh_model);
 
     void SetTextureType(TextureType texture_type);
     void SetDrawVertexNormals(bool draw_vertex_normals);

@@ -161,11 +161,6 @@ void Renderer::ToggleDrawFaceNormals() {
 }
 
 void Renderer::SwitchTextureType() {
-  if (texture_type_ == TextureType::LINEAR){
-    texture_type_ = TextureType::BPM;
-  }
-  else {
-    texture_type_ = TextureType::LINEAR;
-  }
+  texture_type_ = (texture_type_ == TextureType::LINEAR) ? TextureType::BPM : TextureType::LINEAR;
   shader_manager_.SetTextureType(texture_type_);
 }

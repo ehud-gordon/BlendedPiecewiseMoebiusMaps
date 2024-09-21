@@ -131,7 +131,7 @@ void ScrollCallback(GLFWwindow *window, double x_offset, double y_offset) {
     if (const auto& io = ImGui::GetIO(); io.WantCaptureMouse) { return; }
     ControlState* control_state = static_cast<ControlState*>(glfwGetWindowUserPointer(window));
     Camera* active_camera = scene->GetActiveCamera();
-    // if shift is pressed, dolly the camera
+    // if shift is pressed, zoom the camera
     if (control_state->shift_pressed) {
         active_camera->Zoom(static_cast<float>(y_offset));
     }

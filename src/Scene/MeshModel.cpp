@@ -44,8 +44,6 @@ void MeshModel::LoadModel(const std::string& path) {
   bbox_.max_ = v_max;
   
   
-
-  // ProcessNode(scene->mRootNode, scene);
   SetupBBOX();
   Normalize_UV(vt_min, vt_max_delta);
   CenterModel();

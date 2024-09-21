@@ -1,2 +1,8 @@
 newmtl ABC
 map_Kd ABC.png
+
+newmtl patchwork
+map_Kd patchwork_diff.jpg
+
+newmtl red
+map_Kd red.png
