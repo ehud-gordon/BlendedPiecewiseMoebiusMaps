@@ -104,7 +104,7 @@ struct Mat2c {
     Mat2c LogRatio(Matrix2c& m_eigen) {
         Mat2c inv = this->Inv();
         Matrix2c inv_eigen = inv.ToEigenMatrix();
-        Matrix2c delta = m_eigen * inv_eigen;
+        Matrix2c delta = inv_eigen * m_eigen; // ORDER MATTERS
         // check Frobenius sign using
         if (delta(0,0).real() + delta(1,1).real() < 0) {
             delta = -delta;

@@ -15,15 +15,15 @@ static const float SPEED = 2.5f;
 static const float SENSITIVITY = 0.05f;
 static const float PITCH = 0.0f; // radians
 
-static const float FOVY = (HALF_PI); // fovy is entire angle of field of view (not just half angle)
+static const float FOVY = HALF_PI; // fovy is entire angle of field of view (not just half angle)
 static const float Z_NEAR = 0.1f;
 static const float Z_FAR = 100.0f;
 static const float RIGHT_PLANE = 1.0f; // (i think) in camera CS
 static const float TOP_PLANE = 1.0f; // (i think) in camera CS
 // default eye
-static const glm::vec3 DEFAULT_EYE = glm::vec3(0, 0, 2);
-static const glm::vec3 DEFAULT_AT = glm::vec3(0, 0, 0);
-static const glm::vec3 DEFAULT_UP = glm::vec3(0, 1, 0);
+static const glm::vec3 DEFAULT_EYE = glm::vec3(0.0, 0.0, 3.0);
+static const glm::vec3 DEFAULT_AT = glm::vec3(0.0, 0.0, 0.0);
+static const glm::vec3 DEFAULT_UP = glm::vec3(0.0, 1.0, 0.0);
 /* To specify a camera orientation (extrinsic matrix), we need to have 12 parameters - eye, and three vectors, u,v, and n, where u-->right/x, v-->y/up, and n-->z/backward. Notice all these values are in world coordinates. Since this is complicated, we'll let the user specify slightly different values - eye, at, and "up", where "up" is a general direction. We set n to be -(at-eye). right/u will be the cross product of "up" \cross n. and v will actually be calculated by taking n \cross u */
 
 /* There are several camera movements:

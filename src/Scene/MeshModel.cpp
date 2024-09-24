@@ -56,7 +56,6 @@ void MeshModel::LoadModel(const std::string& path) {
 void MeshModel::SetupBBOX() {
 // ---------- BBOX ------------- //
     bbox_.center_ = 0.5f * (bbox_.min_ + bbox_.max_);
-    std::cout << "MeshModel::SetupBBOX() | center: " << bbox_.center_.x << "," << bbox_.center_.y << "," << bbox_.center_.z << std::endl; // TODO print
     bbox_.size_ = bbox_.max_ - bbox_.min_;
     bbox_.largest_dimension_ = std::max(bbox_.size_.x, std::max(bbox_.size_.y, bbox_.size_.z));
     bbox_.ComputeBBoxVertices();
@@ -77,8 +76,6 @@ void MeshModel::SetupBBOX() {
 }
 
 void MeshModel::Normalize_UV(const glm::vec2& vt_min, float vt_max_delta) {
-    // setup texture-coords  min and dims
-    std::cout << "MeshModel::Normalize_UV() | vt_min: " << vt_min.x << "," << vt_min.y << " vt_max_delta: " << vt_max_delta << std::endl; // TODO print
     // normalize texture coordinates
     for (auto& mesh : meshes_) {
         for (auto& vertex : mesh->vertices_) {
@@ -89,7 +86,6 @@ void MeshModel::Normalize_UV(const glm::vec2& vt_min, float vt_max_delta) {
 
 // TEXTURE LOADING
 unsigned int TextureFromFile(const std::string& texture_path) {
-  // TODO handle relative paths
   unsigned int texture_id;
   glGenTextures(1, &texture_id);
 

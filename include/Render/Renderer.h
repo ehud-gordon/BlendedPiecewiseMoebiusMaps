@@ -20,7 +20,7 @@ public:
 	bool draw_vertex_normals_ = false;
 	bool draw_face_normals_ = false;
 	float normal_scale_ = 0.1f;
-	TextureType texture_type_ = TextureType::BPM;	
+	TextureType texture_type_ = TextureType::BPM;
 
 
 

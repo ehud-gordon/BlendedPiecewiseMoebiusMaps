@@ -79,6 +79,9 @@ vec3 EdgeBarycentricCoords(vec2 z, vec2 zi, vec2 zj, vec2 zk) {
 }
 
 
+vec2 ComplexAdd(vec2 z1, vec2 z2) { return z1 + z2; }
+vec2 ComplexSub(vec2 z1, vec2 z2) { return z1 - z2; }
+
 vec2 ComplexMult(vec2 z1, vec2 z2) {
     return vec2(
         z1.x * z2.x - z1.y * z2.y, // Real part
@@ -86,12 +89,34 @@ vec2 ComplexMult(vec2 z1, vec2 z2) {
     );
 }
 
-vec2 ComplexDiv(vec2 z1, vec2 z2) {
-    float denom = dot(z2, z2);
-    return vec2(
-        (z1.x * z2.x + z1.y * z2.y) / denom, // Real part
-        (z1.y * z2.x - z1.x * z2.y) / denom  // Imaginary part
-    );
+
+vec2 ComplexConjugate(vec2 z) {return vec2(z.x, -z.y);}
+
+vec2 ComplexDivide(vec2 z1, vec2 z2) {
+    vec2 numerator = ComplexMult(z1, ComplexConjugate(z2));
+    float denominator = dot(z2, z2);
+    return numerator / denominator;
+}
+
+vec2 ComplexExp(vec2 z) {
+    float ex = exp(z.x);
+    return vec2(ex * cos(z.y), ex * sin(z.y));
+}
+
+vec2 ComplexCosh(vec2 z) {
+    return vec2(cosh(z.x) * cos(z.y), sinh(z.x) * sin(z.y));
+}
+
+vec2 ComplexSinh(vec2 z) {
+    return vec2(sinh(z.x) * cos(z.y), cosh(z.x) * sin(z.y));
+}
+
+vec2 ComplexSqrt(vec2 z) {
+    float r = length(z);
+    float theta = atan(z.y, z.x);
+    float sqrt_r = sqrt(r);
+    float half_theta = theta * 0.5;
+    return vec2(sqrt_r * cos(half_theta), sqrt_r * sin(half_theta));
 }
 
 Mat2c ComplexMatrixMultiply(Mat2c t, Mat2c u) {
@@ -112,6 +137,15 @@ Mat2c ComplexMatrixAdd(Mat2c t, Mat2c u) {
     return m;
 }
 
+Mat2c ComplexMatrixSub(Mat2c t, Mat2c u) {
+    Mat2c m;
+    m.a = ComplexSub(t.a, u.a);
+    m.b = ComplexSub(t.b, u.b);
+    m.c = ComplexSub(t.c, u.c);
+    m.d = ComplexSub(t.d, u.d);
+    return m;
+}
+
 Mat2c ComplexMatrixScalarMult(Mat2c t, float s) {
     Mat2c m;
     m.a = t.a * s;
@@ -121,14 +155,52 @@ Mat2c ComplexMatrixScalarMult(Mat2c t, float s) {
     return m;
 }
 
-Mat2c ComplexMatrixExp(Mat2c t, uint n) {
-    Mat2c res = identity2c();
-    Mat2c term = identity2c();
-    for (uint i = 1; i <= n; i++) {
-        term = ComplexMatrixScalarMult(ComplexMatrixMultiply(term, t), 1.0 / float(i));
-        res = ComplexMatrixAdd(res, term);
-    }
-    return res;
+Mat2c ComplexMatrixComplexMult(Mat2c t, vec2 s) {
+    Mat2c m;
+    m.a = ComplexMult(t.a, s);
+    m.b = ComplexMult(t.b, s);
+    m.c = ComplexMult(t.c, s);
+    m.d = ComplexMult(t.d, s);
+    return m;
+}
+
+Mat2c ComplexMatrixComplexDivide(Mat2c t, vec2 s) {
+    Mat2c m;
+    m.a = ComplexDivide(t.a, s);
+    m.b = ComplexDivide(t.b, s);
+    m.c = ComplexDivide(t.c, s);
+    m.d = ComplexDivide(t.d, s);
+    return m;
+}
+
+vec2 ComplexMatrixDeterminant(Mat2c m) {
+    vec2 ad = ComplexMult(m.a, m.d);
+    vec2 bc = ComplexMult(m.b, m.c);
+    return ComplexSub(ad, bc);
+}
+
+Mat2c ComplexMatrixExp(Mat2c A) {
+    vec2 tau = ComplexAdd(A.a, A.d);
+    vec2 tau_half = tau * 0.5;
+    vec2 s_squared = ComplexMult(tau_half, tau_half);
+    vec2 delta = ComplexMatrixDeterminant(A);
+    vec2 mu_squared = ComplexSub(s_squared, delta);
+    vec2 mu = ComplexSqrt(mu_squared);
+    vec2 exp_tau_half = ComplexExp(tau_half);
+    vec2 cosh_mu = ComplexCosh(mu);
+    vec2 sinh_mu = ComplexSinh(mu);
+    Mat2c sI;
+    sI.a = tau_half; sI.b = vec2(0.0, 0.0);
+    sI.c = vec2(0.0, 0.0); sI.d = tau_half;
+    Mat2c A_minus_sI = ComplexMatrixSub(A, sI);
+    Mat2c K = ComplexMatrixComplexDivide(A_minus_sI, mu);
+    Mat2c K_sinh_mu = ComplexMatrixComplexMult(K, sinh_mu);
+    Mat2c cosh_mu_I = identity2c();
+    cosh_mu_I.a = ComplexMult(cosh_mu_I.a, cosh_mu);
+    cosh_mu_I.d = ComplexMult(cosh_mu_I.d, cosh_mu);
+    Mat2c M = ComplexMatrixAdd(cosh_mu_I, K_sinh_mu);
+    Mat2c exp_A = ComplexMatrixComplexMult(M, exp_tau_half);
+    return exp_A;
 }
 
 vec3 transformPoint3d(vec4 v, mat4 trans) {
@@ -160,7 +232,7 @@ vec2 flattenPoint(vec2 v, mat4 trans) {
 vec2 MobiusTransform(Mat2c coeff, vec2 z) {
     vec2 numerator = ComplexMult(coeff.a, z) + coeff.b;
     vec2 denominator = ComplexMult(coeff.c, z) + coeff.d;
-    return ComplexDiv(numerator, denominator);
+    return ComplexDivide(numerator, denominator);
 }
 
 Mat2c getLogMobiusRatio(uint trig_idx, uint edge_idx) {
@@ -212,9 +284,6 @@ void main() {
     } 
     else if (texture_type == 1) // 1: Trivial PCM
     { 
-        // vec3 edge_barycentric_coords = EdgeBarycentricCoords(fs_in.v_pos_local.xy, fs_in.trig_verts_pos_local[0].xy, fs_in.trig_verts_pos_local[1].xy, fs_in.trig_verts_pos_local[2].xy);
-        // FragColor = vec4(edge_barycentric_coords, 1.0);
-        // return; 
         mat4 trans = getTrans(fs_in.triangle_id);
         vec2 v_pos_tr = flattenPoint(fs_in.v_pos_local, trans);
         Mat2c coeff = getCoeff(fs_in.triangle_id);
@@ -231,10 +300,10 @@ void main() {
         Mat2c blended_log_ratio = BlendedLogRatio(v_pos_tr, vi_tr, vj_tr, vk_tr);
         
         blended_log_ratio = ComplexMatrixScalarMult(blended_log_ratio, 0.5);
-        blended_log_ratio = ComplexMatrixExp(blended_log_ratio, 10);
+        blended_log_ratio = ComplexMatrixExp(blended_log_ratio);
         // Compute Mz
         Mat2c coeff = getCoeff(fs_in.triangle_id);
-        Mat2c Mz = ComplexMatrixMultiply(blended_log_ratio, coeff);
+        Mat2c Mz = ComplexMatrixMultiply(coeff, blended_log_ratio); // ORDER MATTERS!
         // Compute BPM coords
         tex_coords = MobiusTransform(Mz, v_pos_tr);
     }

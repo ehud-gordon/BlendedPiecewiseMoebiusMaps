@@ -46,7 +46,6 @@ Mat2c ComputeMobiusCoefficients(const std::array<Complex, 3>& z, const std::arra
     coefficients.b = cvec(b.real(), b.imag());
     coefficients.c = cvec(c.real(), c.imag());
     coefficients.d = cvec(d.real(), d.imag());
-    coefficients.SetCloseToZero(); // TODO zero
     return coefficients;
 }
 
@@ -113,17 +112,4 @@ cvec ApplyMobius(const Matrix2c& mobius, const cvec& z) {
     Complex z_complex = Complex(z.x, z.y);
     Complex result = ApplyMobius(mobius, z_complex);
     return cvec(result.real(), result.imag());
-}
-
-void SetCloseToZero(Matrix2c& matrix, float epsilon) {
-    for (int i = 0; i < matrix.rows(); ++i) {
-        for (int j = 0; j < matrix.cols(); ++j) {
-            if (std::abs(matrix(i, j).real()) < epsilon) {
-                matrix(i, j).real(0.0f);
-            }
-            if (std::abs(matrix(i, j).imag()) < epsilon) {
-                matrix(i, j).imag(0.0f);
-            }
-        }
-    }
 }

@@ -21,7 +21,6 @@ Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices,
         num_faces_ = indices.size() / 3;
         ssbo_idx_ = shader_manager_.AssignSSBOIndex();
   }
-  // TODO so much logic goes into MeshModel::LoadModel. sad.
 
 Mesh::~Mesh() {
   glDeleteVertexArrays(1, &VAO);
@@ -77,7 +76,6 @@ void Mesh::InitBuffers() {
 
 void Mesh::BindDataBuffers() {
   glBindVertexArray(VAO);
-  // TODO maybe remove below
   GLuint trans_port  = ssbo_idx_ * shader_manager_.ssbo_per_mesh_ + 0;
   GLuint mobius_port = ssbo_idx_ * shader_manager_.ssbo_per_mesh_ + 1;
   GLuint ratios_port = ssbo_idx_ * shader_manager_.ssbo_per_mesh_ + 2;
@@ -234,24 +232,18 @@ void Mesh::NeighborsComputeShader() {
     float tolerance = 1e-6;
     if (std::abs(vl - vi) > tolerance) {
         Matrix2c mobius_coeffs_jil = ComputeMobiusCoefficients_Eigen({vj, vi, vl}, {vj_vt, vi_vt, vl_vt});
-        SetCloseToZero(mobius_coeffs_jil); // TODO zero        
         Mat2c log_jil = mobius_coeffs_ijk.LogRatio(mobius_coeffs_jil);
-        log_jil.SetCloseToZero(); // TODO zero
         mobius_log_ratios[3*trigIdx + 0] = log_jil;
     }
     
     if (std::abs(vm - vi) > tolerance) {        
         Matrix2c mobius_coeffs_kjm = ComputeMobiusCoefficients_Eigen({vk, vj, vm}, {vk_vt, vj_vt, vm_vt});
-        SetCloseToZero(mobius_coeffs_kjm); // TODO zero
         Mat2c log_kjm = mobius_coeffs_ijk.LogRatio(mobius_coeffs_kjm);
-        log_kjm.SetCloseToZero(); // TODO zero
         mobius_log_ratios[3*trigIdx + 1] = log_kjm;
     }
     if (std::abs(vn - vi) > tolerance) {
         Matrix2c mobius_coeffs_ikn = ComputeMobiusCoefficients_Eigen({vi, vk, vn}, {vi_vt, vk_vt, vn_vt});
-        SetCloseToZero(mobius_coeffs_ikn); // TODO zero
         Mat2c log_ikn = mobius_coeffs_ijk.LogRatio(mobius_coeffs_ikn);
-        log_ikn.SetCloseToZero(); // TODO zero
         mobius_log_ratios[3*trigIdx + 2] = log_ikn;
     }
     volatile int dummy = 0;

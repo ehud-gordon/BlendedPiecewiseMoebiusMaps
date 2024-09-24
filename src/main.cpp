@@ -44,7 +44,7 @@ int main(int argc, char* argv[]) {
     // -----------------------------
     scene = new Scene();
     renderer = new Renderer(scene);
-    scene->SetupScene(model_path); // TODO maybe can be moved inside Scene constructor
+    scene->SetupScene(model_path);
     
     // UI setup
     UI ui = UI(scene,renderer, window);
@@ -53,7 +53,6 @@ int main(int argc, char* argv[]) {
     // -----------
     while (!glfwWindowShouldClose(window)) {
         control_state->UpdateDeltaTime(static_cast<float>(glfwGetTime()));
-    
         renderer->Draw();
         ui.ShowUI(); 
 
