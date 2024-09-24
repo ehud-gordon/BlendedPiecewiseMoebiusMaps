@@ -8,10 +8,7 @@ C++/OpenGL implementation of [BPM: Blended Piecewise M&ouml;bius Maps](https://m
 Technical report is under `doc` folder.
 ## Video
 
-
-https://github.com/user-attachments/assets/dc4b5f5d-7f66-42e6-8f5d-3aa0f93195c5
-
-
+https://github.com/user-attachments/assets/32da3296-b41f-47cb-b0fb-f1b43f9ea4f4
 
 
 ## Build Instructions
