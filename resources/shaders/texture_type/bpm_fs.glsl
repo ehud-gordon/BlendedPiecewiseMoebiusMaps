@@ -179,6 +179,16 @@ vec2 ComplexMatrixDeterminant(Mat2c m) {
     return ComplexSub(ad, bc);
 }
 
+Mat2c ComplexMatrixExp(Mat2c t, uint n) {
+    Mat2c res = identity2c();
+    Mat2c term = identity2c();
+    for (uint i = 1; i <= n; i++) {
+        term = ComplexMatrixScalarMult(ComplexMatrixMultiply(term, t), 1.0 / float(i));
+        res = ComplexMatrixAdd(res, term);
+    }
+    return res;
+}
+
 Mat2c ComplexMatrixExp(Mat2c A) {
     vec2 tau = ComplexAdd(A.a, A.d);
     vec2 tau_half = tau * 0.5;
@@ -300,7 +310,8 @@ void main() {
         Mat2c blended_log_ratio = BlendedLogRatio(v_pos_tr, vi_tr, vj_tr, vk_tr);
         
         blended_log_ratio = ComplexMatrixScalarMult(blended_log_ratio, 0.5);
-        blended_log_ratio = ComplexMatrixExp(blended_log_ratio);
+        blended_log_ratio = ComplexMatrixExp(blended_log_ratio,10);
+        // blended_log_ratio = ComplexMatrixExp(blended_log_ratio);
         // Compute Mz
         Mat2c coeff = getCoeff(fs_in.triangle_id);
         Mat2c Mz = ComplexMatrixMultiply(coeff, blended_log_ratio); // ORDER MATTERS!
